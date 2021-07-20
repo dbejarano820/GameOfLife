@@ -19,6 +19,7 @@ class Casilla:
         self.genero = genero   # verdadero es mujer
         self.salud = salud     # verdadero es saludable
         self.estado = estado   # verdadero es vivo
+        self.hayEnte = True
         self.tienePareja = False
 
     def completar_cuadrado(self):
@@ -30,9 +31,6 @@ class Casilla:
             self.contadorTurnosPareja = self.contadorTurnosPareja + 1
         else:
             self.contadorTurnosPareja = 0
-    # def pintar_valido(self, coordenadas):
-    #     (x,y) = coordenadas
-    #     return (x>=0 and x<=self.tamaño) and (y>=0 and y<=self.tamaño-tamaño)
 
     def vecinos(self): 
         (x, y) = self.coordenadas
@@ -43,6 +41,7 @@ class Casilla:
         ]))
 
     def obtener_color(self):
+        print(self.hayEnte)
         if(self.hayEnte):
             if not self.estado:
                 return self.colorMuerto
@@ -73,7 +72,7 @@ class Tablero:
         self.colorEnfermo = colorEnfermo
         self.signoHombre = signoHombre
         self.signoMujer = signoMujer
-        self.turno = 0
+        self.turno = 1
         self.turnosSinNacimiento = 0
         self.casillas = self.iniciar_tablero()
         self.primera_generacion()
@@ -98,8 +97,8 @@ class Tablero:
 
     def primera_generacion(self):
         contador = 200
-        random_casillas = self.casillas.items()
-        #random.shuffle(random_casillas)
+        random_casillas = list(self.casillas.items())
+        random.shuffle(random_casillas)
         for coordenadas, casilla in random_casillas:
             if contador < 1:
                 break
@@ -161,8 +160,9 @@ class Tablero:
 
 class Administracion:
 
-    def __init__(self, root):
+    def __init__(self, root, tablero):
         self.root = root
+        self.tablero = tablero
         pass
 
 

@@ -9,7 +9,7 @@ class Pantalla:
 
         self.root = Tk()
         self.tablero = logica.Tablero(self.largo, self.tamañoCasilla)
-        self.admin = logica.Administracion(self.root)
+        self.admin = logica.Administracion(self.root, self.tablero)
         self.canvas = Canvas(self.root, height=self.largo, width=self.largo)
         self.canvas.pack()
         
@@ -20,7 +20,7 @@ class Pantalla:
         self.enfermar = Button(self.root, text="Enfermar", command=self.admin.enfermar)
         self.enfermar.pack(side=RIGHT, padx=15, pady=15)
 
-        self.turnos = Label(self.root, text= "Turno: 1")
+        self.turnos = Label(self.root, text= "Turno: " + str(self.tablero.turno))
         self.turnos.config(font=("Courier", 44))
         self.turnos.pack()
         self.items = self.actualizar()
