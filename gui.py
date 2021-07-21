@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 import logica
 
 class Pantalla:
@@ -9,7 +10,7 @@ class Pantalla:
 
         self.root = Tk()
         self.tablero = logica.Tablero(self.largo, self.tamañoCasilla)
-        self.admin = logica.Administracion(self.root, self.tablero)
+        self.admin = logica.Administracion(self)
         self.canvas = Canvas(self.root, height=self.largo, width=self.largo)
         self.canvas.pack()
         
@@ -23,16 +24,19 @@ class Pantalla:
         self.turnos = Label(self.root, text= "Turno: " + str(self.tablero.turno))
         self.turnos.config(font=("Courier", 44))
         self.turnos.pack()
-        self.items = self.actualizar()
-        self.root.after(5, self.actualizar)
+        self.itemsColores = self.actualizarColores()
+        self.itemsGeneros = self.actualizarGeneros()
+      #  self.root.after(5, self.actualizar)
         self.root.mainloop()
     
     def refrescar(self):
         self.tablero.comportamiento()
-        self.actualizar(canvas_done=True, canvas_items=self.items)
-        self.root.after(5, self.refrescar)
+        self.actualizarColores(canvas_done=True, canvas_items=self.itemsColores)
+        self.actualizarGeneros(canvas_done=True, canvas_items=self.itemsGeneros)
+        self.turnos.configure(text="Turno: " + str(self.tablero.turno))
+       # self.root.after(5, self.refrescar)
 
-    def actualizar(self, canvas_done=False, canvas_items={}):
+    def actualizarColores(self, canvas_done=False, canvas_items={}):
 
         casillas_items = self.tablero.casillas
 
@@ -51,3 +55,27 @@ class Pantalla:
             if canvas_items:
                 for coordenadas, item in canvas_items.items():
                     self.canvas.itemconfig(item, fill=casillas_items[coordenadas].obtener_color())
+
+    def actualizarGeneros(self, canvas_done=False, canvas_items={}):
+
+        casillas_items = self.tablero.casillas
+
+        if not canvas_done:
+
+            for coordenadas, casilla in casillas_items.items():
+                (x1, y1) = coordenadas
+                x1 = x1 + 12.5
+                y1 = y1 + 12.5
+
+                canvas_items[coordenadas] = self.canvas.create_text(x1, y1, text= casilla.obtener_signo(), fill="black")
+                #obtener genero otra lista de items
+            return canvas_items
+        
+        else:
+
+            if canvas_items:
+                for coordenadas, item in canvas_items.items():
+                    self.canvas.itemconfig(item, text=casillas_items[coordenadas].obtener_signo())
+
+    def terminarJuego(self):
+        messagebox.showinfo("showinfo", "El juego de la vida ha terminado")
